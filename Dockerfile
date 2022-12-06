@@ -1,4 +1,4 @@
-FROM registry.gitlab.iitsp.com/allworldit/docker/alpine/v3.16:latest
+FROM registry.gitlab.iitsp.com/allworldit/docker/alpine:latest
 
 ARG VERSION_INFO=
 LABEL maintainer="Nigel Kukard <nkukard@lbsd.net>"
