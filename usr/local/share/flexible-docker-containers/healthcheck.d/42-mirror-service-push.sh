@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright (c) 2022-2023, AllWorldIT.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,57 +20,21 @@
 # IN THE SOFTWARE.
 
 
-# Disallow all forwarding
-DisableForwarding yes
+SSH_TEST_RESULT_IPV4=$( nc -w 5 127.0.0.1 22 2>&1 )
+if ! grep -q 'SSH-2.0-OpenSSH_' <<< "$SSH_TEST_RESULT_IPV4"; then
+	fdc_error "Health check failed for OpenSSH using IPv4:\n$SSH_TEST_RESULT_IPV4"
+	false
+fi
 
-# Allow only logins for the rsyncssh group
-AllowGroups rsyncssh
 
-# Only allow public key authentication
-AuthenticationMethods publickey
+# Return if we don't have IPv6 support
+if [ -z "$(ip -6 route show default)" ]; then
+	return
+fi
 
-# Set client alive interval to 10s
-ClientAliveInterval 10
 
-# Only use a ed25519 host key
-HostKey /etc/ssh/ssh_host_ed25519_key
-
-# Set QOS to throughput
-IPQoS throughput
-
-# Disable keyboard interactive authentication
-KbdInteractiveAuthentication no
-
-# Set login grace time to 10s
-LoginGraceTime 10
-
-# Use verbose logging
-LogLevel VERBOSE
-
-# Max auth tries to 1
-MaxAuthTries 1
-
-# Set maximum sessions to 5
-MaxSessions 5
-
-# Disable password autehtnication
-PasswordAuthentication no
-
-# Disable empty passwords
-PermitEmptyPasswords no
-
-# Disable root login
-PermitRootLogin no
-
-# Disable TTY allocation
-PermitTTY no
-
-# Disable tunneling
-PermitTunnel no
-
-# Disable UserRC files
-PermitUserRC no
-
-# Disable motd
-PrintMotd no
-
+SSH_TEST_RESULT_IPV6=$( nc -w 5 ::1 22 2>&1 )
+if ! grep -q 'SSH-2.0-OpenSSH_' <<< "$SSH_TEST_RESULT_IPV6"; then
+	fdc_error "Health check failed for OpenSSH using IPv6:\n$SSH_TEST_RESULT_IPV4"
+	false
+fi

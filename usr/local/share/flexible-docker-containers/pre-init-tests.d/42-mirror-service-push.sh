@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright (c) 2022-2023, AllWorldIT.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,57 +20,15 @@
 # IN THE SOFTWARE.
 
 
-# Disallow all forwarding
-DisableForwarding yes
+fdc_notice "Setting up Mirror Push Service test environment"
 
-# Allow only logins for the rsyncssh group
-AllowGroups rsyncssh
+apk add --no-cache socat
 
-# Only allow public key authentication
-AuthenticationMethods publickey
+# Generate key
+ssh-keygen -q -N "" -t ed25519 -f /root/testsshkey
 
-# Set client alive interval to 10s
-ClientAliveInterval 10
+# Grab key
+KEY=$(cat /root/testsshkey.pub)
 
-# Only use a ed25519 host key
-HostKey /etc/ssh/ssh_host_ed25519_key
-
-# Set QOS to throughput
-IPQoS throughput
-
-# Disable keyboard interactive authentication
-KbdInteractiveAuthentication no
-
-# Set login grace time to 10s
-LoginGraceTime 10
-
-# Use verbose logging
-LogLevel VERBOSE
-
-# Max auth tries to 1
-MaxAuthTries 1
-
-# Set maximum sessions to 5
-MaxSessions 5
-
-# Disable password autehtnication
-PasswordAuthentication no
-
-# Disable empty passwords
-PermitEmptyPasswords no
-
-# Disable root login
-PermitRootLogin no
-
-# Disable TTY allocation
-PermitTTY no
-
-# Disable tunneling
-PermitTunnel no
-
-# Disable UserRC files
-PermitUserRC no
-
-# Disable motd
-PrintMotd no
-
+# Setup config
+export MIRROR_PUSH_CONFIG="$KEY /data"
