@@ -52,7 +52,7 @@ We also provide consulting services to create and maintain Docker images to meet
 # Environment Variables
 
 Environment variables are available from...
-* [Conarx Containers Alpine image](https://gitlab.conarx.tech/containers/alpine).
+* [Conarx Containers Alpine image](https://gitlab.conarx.tech/containers/alpine)
 
 
 ## MIRROR_PUSH_CONFIG
